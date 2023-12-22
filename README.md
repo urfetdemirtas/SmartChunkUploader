@@ -10,4 +10,5 @@ Projede, ASP.NET Core'un robust yapısı kullanılarak, dosya yükleme işlemini
 ![image](https://github.com/urfetdemirtas/SmartChunkUploader/assets/11385403/a7957240-5cb0-4066-83df-26527db82e5e)
 
 Ürfet Demirtaş
+www.urfetdemirtas.com
 22.12.2023

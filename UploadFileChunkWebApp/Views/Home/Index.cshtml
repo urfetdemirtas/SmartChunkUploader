@@ -1,0 +1,131 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    #loadingIndicator {
+        display: none;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="text-center">
+    <div id="uploadStatus"></div>
+    <div id="loadingIndicator">Yükleniyor...</div>
+    <div id="progressStatus"></div>
+
+    <form id="uploadForm">
+        <input type="file" id="fileInput" multiple>
+        <button type="button" onclick="uploadSelectedFiles()">Dosyaları Yükle</button>
+    </form>
+
+    <script>
+        /**
+        * Bu fonksiyon, kullanıcının seçtiği dosyaları boyutlarına göre sıralar ve ardından her birini sunucuya yükler.
+        * Yükleme süreci sırasında ilerleme durumu güncellenir ve tamamlandığında kullanıcıya bildirim gösterilir.
+        */
+        async function uploadSelectedFiles() {
+            let files = Array.from(document.getElementById('fileInput').files);
+            files.sort((a, b) => a.size - b.size); // Dosyaları boyutlarına göre sırala
+
+            const totalFiles = files.length;
+            let uploadedFiles = 0;
+
+            showLoadingIndicator(true);
+            updateProgressStatus(uploadedFiles, totalFiles);
+
+            for (let file of files) {
+                await uploadFile(file);
+                uploadedFiles++;
+                updateProgressStatus(uploadedFiles, totalFiles);
+            }
+
+            showAlert('Tüm dosyalar başarıyla yüklendi!');
+            updateStatus('Yükleme tamamlandı.');
+            clearFileInput();
+            showLoadingIndicator(false);
+        }
+
+        /**
+         * Bu fonksiyon, verilen bir dosyayı belirlenen CHUNK_SIZE büyüklüğünde parçalara bölerek her bir parçayı sunucuya yükler.
+         * İnternet bağlantısı gibi sorunlar nedeniyle yükleme başarısız olursa, belirli bir sayıda yeniden deneme yapar.
+         * Yeniden deneme sayısına ulaşıldığında ve hala başarılı olamazsa, işlem durdurulur ve hata mesajı güncellenir.
+         */
+        async function uploadFile(file) {
+            const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
+            let chunkNumber = 0;
+            const MAX_RETRIES = 3; // Maksimum yeniden deneme sayısı
+
+            // Dosya adını benzersiz yap
+            const uniqueFileName = getUniqueFileName(file.name).toLowerCase();
+
+            for (let start = 0; start < file.size; start += CHUNK_SIZE) {
+                chunkNumber++;
+                const chunk = file.slice(start, Math.min(start + CHUNK_SIZE, file.size));
+                let retries = 0;
+
+                while (retries < MAX_RETRIES) {
+                    try {
+                        const formData = new FormData();
+                        formData.append('fileChunk', chunk, uniqueFileName);
+                        formData.append('fileName', uniqueFileName);
+                        formData.append('chunkNumber', chunkNumber);
+
+                        await fetch('/Home/UploadFileChunk', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        break; // Yükleme başarılı, döngüden çık
+                    } catch (error) {
+                        console.error(`Chunk ${chunkNumber} upload failed, retrying...`, error);
+                        retries++;
+                        if (retries === MAX_RETRIES) {
+                            updateStatus(`Chunk ${chunkNumber} could not be uploaded after ${MAX_RETRIES} retries.`);
+                            return; // Maksimum yeniden deneme sayısına ulaşıldı, döngüden çık
+                        }
+                    }
+                }
+            }
+        }
+
+        function getUniqueFileName(fileName) {
+            const extension = fileName.slice(fileName.lastIndexOf('.'));
+            const nameWithoutExtension = fileName.slice(0, fileName.lastIndexOf('.'));
+            const guid = generateGUID();
+            return `${nameWithoutExtension}-${guid}${extension}`;
+        }
+
+        function generateGUID() {
+            let guid = '';
+            for (let i = 0; i < 32; i++) {
+                if (i === 8 || i === 12 || i === 16 || i === 20) {
+                    guid += '-';
+                }
+                guid += Math.floor(Math.random() * 16).toString(16);
+            }
+            return guid;
+        }
+
+        function showAlert(message) {
+            alert(message);
+        }
+
+        function updateStatus(message) {
+            document.getElementById('uploadStatus').innerText = message;
+        }
+
+        function showLoadingIndicator(show) {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            loadingIndicator.style.display = show ? 'block' : 'none';
+        }
+
+        function clearFileInput() {
+            document.getElementById('fileInput').value = '';
+        }
+
+        function updateProgressStatus(uploaded, total) {
+            document.getElementById('progressStatus').innerText = `İlerleme: ${uploaded}/${total}`;
+        }
+    </script>
+</div>

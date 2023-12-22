@@ -11,3 +11,4 @@ Projede, ASP.NET Core'un robust yapısı kullanılarak, dosya yükleme işlemini
 
 # Ürfet Demirtaş
 2024 yılına girmeden... (22.12.2023)
+www.urfetdemirtas.com

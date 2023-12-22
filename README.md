@@ -3,4 +3,4 @@ Bu proje, dosyaların parçalara bölünerek (chunks) sunucuya etkin ve güvenli
 
 Projede, ASP.NET Core'un robust yapısı kullanılarak, dosya yükleme işleminin güvenliği ve etkinliği artırılmıştır. Hata yönetimi ve günlüğe kaydetme özellikleri, hata ayıklama ve sistem izleme süreçlerini kolaylaştırır.
 
-![Uploading image.png…]()
+![image](https://github.com/urfetdemirtas/SmartChunkUploader/assets/11385403/8c29c90a-71b5-4d2b-a8cf-44cb79a5086c)

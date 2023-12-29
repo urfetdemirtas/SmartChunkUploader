@@ -1,24 +1,26 @@
-# SmartChunkUploader
+# SmartChunkUploader 
 
-Bu proje, dosyaların parçalara bölünerek (chunks) sunucuya etkin ve güvenli bir şekilde yüklenmesini sağlayan bir ASP.NET Core API'sidir. Her parça, dosyanın bütünlüğünü koruyarak ve yükleme sürecinde oluşabilecek hataları minimuma indirgeyerek ayrı ayrı işlenir.
+Bu proje, dosyaların parçalara bölünerek (chunks) sunucuya etkin ve güvenli bir şekilde yüklenmesini sağlayan bir ASP.NET Core API'sidir. Her parça, dosyanın bütünlüğünü koruyarak ve yükleme sürecinde oluşabilecek hataları minimuma indirgeyerek ayrı ayrı işlenir. Güvenlik kontrolleri, geçerli dosya uzantılarının doğrulamasını içerir ve eşzamanlı yüklemeleri yönetmek için benzersiz dosya adları kullanılır. Bu sistem, büyük dosyaların yüklenmesi, internet bağlantısının kesilmesi durumunda yüklemenin devam etmesi ve sunucu kaynaklarının verimli kullanımı gibi durumlar için idealdir.
 
-## Özellikler
+ASP.NET Core'un robust yapısı kullanılarak, dosya yükleme işleminin güvenliği ve etkinliği artırılmıştır. Hata yönetimi ve günlüğe kaydetme özellikleri, hata ayıklama ve sistem izleme süreçlerini kolaylaştırır.
 
-- **Güvenlik Kontrolleri:** Geçerli dosya uzantılarının doğrulamasını içerir ve eşzamanlı yüklemeleri yönetmek için benzersiz dosya adları kullanılır.
-- **Dosya Hash Kontrolü:** Yüklenen her dosya parçasının hash değeri hesaplanır ve tüm parçalar yüklendikten sonra, sunucu tarafında dosyanın tamamının hash değeri tekrar hesaplanarak doğruluğu kontrol edilir.
-- **Hatalı Yüklemelerde Dosya Silme:** Eğer dosya hash değerleri uyuşmazsa, hatalı dosya sunucudan otomatik olarak silinir.
-- **Kapsamlı Günlüğe Kaydetme:** Sistem, dosya yükleme işlemleri sırasında oluşan hataları ve önemli olayları detaylı bir şekilde günlüğe kaydeder.
-- **Etkin Kaynak Kullanımı:** Dosyaların parçalara bölünerek yüklenmesi, sunucu kaynaklarının daha etkin kullanılmasını sağlar.
+## Önemli Özellikler
 
-## Kullanım
+### Dosya Hash Kontrolü
+Yüklenen her dosya parçasının (chunk) hash değeri hesaplanır ve tüm parçalar yüklendikten sonra, sunucu tarafında dosyanın tamamının hash değeri tekrar hesaplanarak doğruluğu kontrol edilir. Bu, dosyanın bütünlüğünü ve veri bozulmalarına karşı korunmasını sağlar.
 
-Bu bölümde, projenin nasıl kullanılacağına dair talimatlar yer almalıdır.
+### Hatalı Yüklemelerde Dosya Silme
+Eğer dosya hash değerleri uyuşmazsa, yani dosya doğru bir şekilde yüklenmemişse, hatalı dosya sunucudan otomatik olarak silinir. Bu, veri tutarlılığını korumak ve yanlış yüklemelerin sisteme zarar vermesini önlemek için önemli bir güvenlik önlemidir.
+
+### Kapsamlı Günlüğe Kaydetme
+Sistem, dosya yükleme işlemleri sırasında oluşan hataları ve önemli olayları detaylı bir şekilde günlüğe kaydeder. Bu, sistem yöneticilerinin hata ayıklama ve izleme işlemlerini daha verimli bir şekilde yapmalarına olanak tanır.
+
+### Etkin Kaynak Kullanımı
+Dosyaların parçalara bölünerek yüklenmesi, sunucu kaynaklarının daha etkin kullanılmasını sağlar. Özellikle büyük dosyaların yüklenmesi sırasında, sistem kaynaklarının aşırı yüklenmesini önler ve daha dengeli bir yükleme süreci sunar.
 
 ## Katkıda Bulunma
 
-Projeye katkıda bulunmak isteyenler için yönergeler.
-
-## Lisans
+Hakan KÜÇÜK, Recep ERDOĞAN
 
 Bu proje [LİSANS](LICENSE) altında lisanslanmıştır.
 

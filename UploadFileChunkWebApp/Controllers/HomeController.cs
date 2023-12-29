@@ -20,7 +20,9 @@ namespace UploadFileChunkWebApp.Controllers
         {
             public required IFormFile FileChunk { get; set; }
             public required string FileName { get; set; }
-            public int ChunkNumber { get; set; } 
+            public required int ChunkNumber { get; set; }
+            public required int TotalChunks { get; set; }
+            public required string ClientFileHash { get; set; } // İstemci tarafından gönderilen hash
         }
 
         [HttpPost]
@@ -53,7 +55,32 @@ namespace UploadFileChunkWebApp.Controllers
 
                 // Dosya parçasını yaz
                 using (var stream = new FileStream(filePath, model.ChunkNumber == 1 ? FileMode.Create : FileMode.Append))
+                {
                     await model.FileChunk.CopyToAsync(stream);
+                    stream.Close();
+                    stream.Dispose();
+                }
+
+                // Eğer son parça ise, dosyanın tamamının yüklendiğini doğrula
+                if (model.ChunkNumber == model.TotalChunks)
+                {
+                    // Burada dosyanın hash'ini hesaplayabilir ve kontrol yapabilirsiniz
+                    var fileHash = await CalculateFileHash(filePath); 
+
+                    // İstemci tarafından gönderilen hash ile karşılaştır
+                    if (fileHash != model.ClientFileHash)
+                    {
+                        _logger.LogError($"Dosya hash uyuşmazlığı: {fileHash} != {model.ClientFileHash}");
+                        // Dosyayı sil
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+                        return BadRequest("Dosya hash değerleri uyuşmuyor.");
+                    }
+
+                    // Hash kontrolü başarılı, dosya tamamlanma işlemleri...
+                }
             }
             catch (Exception ex)
             {
@@ -63,6 +90,15 @@ namespace UploadFileChunkWebApp.Controllers
             }
 
             return Ok("Parça başarıyla yüklendi.");
+        }
+
+        private async Task<string> CalculateFileHash(string filePath)
+        {
+            using (var stream = System.IO.File.OpenRead(filePath))
+            {
+                var hash = await System.Security.Cryptography.SHA256.Create().ComputeHashAsync(stream);
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            }
         }
     }
 }

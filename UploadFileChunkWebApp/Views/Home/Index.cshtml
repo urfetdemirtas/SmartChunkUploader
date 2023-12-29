@@ -9,7 +9,7 @@
     }
 </style>
 
-<div class="text-center">
+<div style="text-align:center; margin-top:10px;">
     <div id="uploadStatus"></div>
     <div id="loadingIndicator">Yükleniyor...</div>
     <div id="progressStatus"></div>
@@ -35,7 +35,8 @@
             updateProgressStatus(uploadedFiles, totalFiles);
 
             for (let file of files) {
-                await uploadFile(file);
+                const fileHash = await calculateHash(file); // Dosya hash'ini hesapla
+                await uploadFile(file, fileHash);
                 uploadedFiles++;
                 updateProgressStatus(uploadedFiles, totalFiles);
             }
@@ -51,9 +52,10 @@
          * İnternet bağlantısı gibi sorunlar nedeniyle yükleme başarısız olursa, belirli bir sayıda yeniden deneme yapar.
          * Yeniden deneme sayısına ulaşıldığında ve hala başarılı olamazsa, işlem durdurulur ve hata mesajı güncellenir.
          */
-        async function uploadFile(file) {
+        async function uploadFile(file, fileHash) {
             const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
             let chunkNumber = 0;
+            const totalChunks = Math.ceil(file.size / CHUNK_SIZE); // Toplam parça sayısını hesapla 
             const MAX_RETRIES = 3; // Maksimum yeniden deneme sayısı
 
             // Dosya adını benzersiz yap
@@ -70,6 +72,8 @@
                         formData.append('fileChunk', chunk, uniqueFileName);
                         formData.append('fileName', uniqueFileName);
                         formData.append('chunkNumber', chunkNumber);
+                        formData.append('totalChunks', totalChunks); 
+                        formData.append('clientFileHash', fileHash);
 
                         await fetch('/Home/UploadFileChunk', {
                             method: 'POST',
@@ -126,6 +130,11 @@
 
         function updateProgressStatus(uploaded, total) {
             document.getElementById('progressStatus').innerText = `İlerleme: ${uploaded}/${total}`;
+        }
+
+        async function calculateHash(file) {
+            const hashBuffer = await crypto.subtle.digest('SHA-256', await file.arrayBuffer());
+            return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
     </script>
 </div>

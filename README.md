@@ -5,7 +5,7 @@ Projede, ASP.NET Core'un robust yapısı kullanılarak, dosya yükleme işlemini
 
 *Dosya Hash Kontrolü:* Yüklenen her dosya parçasının (chunk) hash değeri hesaplanır ve tüm parçalar yüklendikten sonra, sunucu tarafında dosyanın tamamının hash değeri tekrar hesaplanarak doğruluğu kontrol edilir. Bu, dosyanın bütünlüğünü ve veri bozulmalarına karşı korunmasını sağlar.
 
-*Hatalı Yüklemelerde Dosya Silme:* Eğer dosya hash değerleri uyuşmazsa, yani dosya doğru bir şekilde yüklenmemişse, hatalı dosya sunucudan otomatik olarak silinir. Bu, veri tutarlılığını korumak ve yanlış yüklemelerin sisteme zarar vermesini önlemek için önemli bir güvenlik önlemidir.
+#Hatalı Yüklemelerde Dosya Silme:# Eğer dosya hash değerleri uyuşmazsa, yani dosya doğru bir şekilde yüklenmemişse, hatalı dosya sunucudan otomatik olarak silinir. Bu, veri tutarlılığını korumak ve yanlış yüklemelerin sisteme zarar vermesini önlemek için önemli bir güvenlik önlemidir.
 
 *Kapsamlı Günlüğe Kaydetme:* Sistem, dosya yükleme işlemleri sırasında oluşan hataları ve önemli olayları detaylı bir şekilde günlüğe kaydeder. Bu, sistem yöneticilerinin hata ayıklama ve izleme işlemlerini daha verimli bir şekilde yapmalarına olanak tanır.
 

@@ -20,7 +20,7 @@ Dosyaların parçalara bölünerek yüklenmesi, sunucu kaynaklarının daha etki
 
 ## Katkıda Bulunma
 
-Hakan KÜÇÜK, Recep ERDOĞAN
+Hakan KÜÇÜK, Recep ERDOĞAN @https://github.com/rcperdgn
 
 ![image](https://github.com/urfetdemirtas/SmartChunkUploader/assets/11385403/df23fae5-fa1f-4187-b10a-d316ea105609)
 

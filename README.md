@@ -22,13 +22,10 @@ Dosyaların parçalara bölünerek yüklenmesi, sunucu kaynaklarının daha etki
 
 Hakan KÜÇÜK, Recep ERDOĞAN
 
-Bu proje [LİSANS](LICENSE) altında lisanslanmıştır.
-
 ![image](https://github.com/urfetdemirtas/SmartChunkUploader/assets/11385403/df23fae5-fa1f-4187-b10a-d316ea105609)
 
 ![image](https://github.com/urfetdemirtas/SmartChunkUploader/assets/11385403/a7957240-5cb0-4066-83df-26527db82e5e)
 
 # Ürfet Demirtaş
 2024 yılına girmeden... (22.12.2023)
-
 www.urfetdemirtas.com
